@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head></head>
+	<body>
+		<div class="container">
+			<h3>Frage 6</h3>
+			<form id="survey_question_1" th:object="${answer}" style="width: 60%; margin: 0px auto;" method="post" th:action="@{/survey/answer}">
+				<fieldset class="form-group">
+					<legend>Zum Abschluss: Erachten Sie ... als ?</legend>
+					<div class="form-check">
+						<label class="form-check-label"> 
+							<input type="radio" th:field="*{optionId}" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" checked> sinnvoll
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label"> 
+							<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" th:field="*{optionId}" value="2"> sinnloss
+						</label>
+					</div>
+				</fieldset>
+	
+				<!-- do not use th:field for the questionId to set, because thymeleaf internally overwrites it -->
+				<input type="hidden" name="questionId" th:value="5" /> 
+				<input type="submit" value="Weiter" class="btn btn-default" id="btn_submit">
+			</form>
+		</div>
+	</body>
+</html>

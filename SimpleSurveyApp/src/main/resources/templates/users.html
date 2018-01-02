@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Benutzer</title>
+	</head>
+	<body>	
+		<!-- with replace, we can use a code-fragment to replace a specific part of the DOM -->
+		<div th:replace="fragments/header :: head">...</div>
+	
+		<div class="container">
+			<!-- with include, we can include specific DOM-contents of a file -->
+			<div th:include="fragments/navbar :: body">&nbsp;</div>
+			
+			<div class="page-header" id="banner">
+				<div class="row">
+					<div class="col-lg-8 col-md-7 col-sm-6">
+						<h1>Benutzer</h1>
+	
+						<table class="table table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Vorname</th>
+									<th>Login</th>
+									<th>Nachname</th>
+									<th>Aktiver Benutzer</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- via controller, the background bean will be filled and can be iterated for the users in the database -->
+								<tr th:each="user : ${users}">
+									<td th:text="${user.firstname}"></td>
+									<td th:text="${user.login}"></td>
+									<td th:text="${user.surname}"></td>
+									<td th:text="${user.active}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

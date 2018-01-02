@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<title th:text="${survey.label}"></title>
+	</head>
+	<body>
+		<!-- include header and navbar from fragment-files -->
+		<div th:replace="fragments/header :: head">...</div>
+		<div class="container">
+			<div th:include="fragments/navbar :: body">&nbsp;</div>
+	
+			<!-- content of the question section will be replaced dynamically with the content from the survey_question.html -->
+			<div th:replace="@{'questions/' + ${template}} :: body"></div>
+		</div>
+	</body>
+		
+
+</html>

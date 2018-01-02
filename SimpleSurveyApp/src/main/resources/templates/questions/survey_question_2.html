@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head></head>
+	<body>	
+		<div class="container">	
+			<h3>Frage 3</h3>
+			<form id="survey_question_2" style="width: 60%; margin: 0px auto;" method="post" th:action="@{/survey/answer}">
+				<div class="form-group" >
+					<label for="question_2">Wie finden Sie ... ? (1 - Sehr gut bis 5 - Sehr schlecht)</label> 				 
+					<select multiple class="form-control" name="question_2" id="question_2">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+					</select>
+				</div>
+				<input type="hidden" name="questionId" th:value="2"/>
+				<input type="submit" value="Weiter" class="btn btn-default" id="btn_submit">
+			</form>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Umfragen</title>
+
+	</head>
+	<body>
+		<!-- with replace, we can use a code-fragment to replace a specific part of the DOM -->
+		<div th:replace="fragments/header :: head">...</div>
+	
+		<div class="container">
+			<!-- with include, we can include specific DOM-contents of a file -->
+			<div th:include="fragments/navbar :: body">&nbsp;</div>
+		
+			<div class="page-header" id="banner">
+				<div class="row">
+					<div class="col-lg-8 col-md-7 col-sm-6">
+						<h1>Umfragen</h1>
+	
+						<table class="table table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Label</th>
+									<th>Beschreibung</th>
+									<th>Anzahl der Fragen</th>
+									<th>Anzahl der Absolvierungen</th>
+									<th>Starten</th>
+								</tr>
+							</thead>
+							<tbody>
+	
+								<tr th:each="survey : ${surveys}">
+									<td th:text="${survey.id}"></td>
+									<td th:text="${survey.label}"></td>
+									<td th:text="${survey.desc}"></td>
+									<td th:text="${survey.questions}"></td>
+									<td th:text="${survey.completions}"></td>
+									<td><a th:href="${'/survey/' + survey.id}">Starten</a></td>
+	
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

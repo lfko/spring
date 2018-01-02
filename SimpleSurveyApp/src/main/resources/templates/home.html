@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Umfrage-Tool</title>		
+	</head>
+	<body>
+		<!-- with replace, we can use a code-fragment to replace a specific part of the DOM -->
+		<div th:replace="fragments/header :: head">...</div>
+
+		<div class="container">
+			<!-- with include, we can include specific DOM-contents of a file -->
+			<div th:include="fragments/navbar :: body">&nbsp;</div>
+
+			<div class="jumbotron">
+				<div class="container text-center">
+					<h2>Willkommen beim Online-Umfrage-Tool</h2>
+					<p>Hier kann noch ein einleitender Text stehen</p>
+					<p><span th:utext="${userName}"></span><p>
+				</div>
+			</div>
+
+					
+			<div th:replace="fragments/footer :: footer">...</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>403 - Access denied!</title>
+	</head>
+	<body> 
+		<!-- with replace, we can use a code-fragment to replace a specific part of the DOM -->
+		<div th:replace="fragments/header :: head">...</div>
+		
+		<div class="container">
+			<!-- with include, we can include specific DOM-contents of a file -->
+			<div th:include="fragments/navbar :: body">&nbsp;</div>
+					
+			<div class="alert-danger">
+				<h3>You do not have permission to access this page!</h3>	
+			</div>
+			<form th:action="@{/logout}" class="form-horizontal" method="post">
+				<input type="submit" class="form-control" value="Sign in as different user" /> 
+			</form>		
+		</div>
+	</body>
+</html>
