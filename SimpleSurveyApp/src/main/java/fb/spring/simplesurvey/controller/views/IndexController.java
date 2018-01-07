@@ -3,11 +3,10 @@
  */
 package fb.spring.simplesurvey.controller.views;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +22,6 @@ import fb.spring.simplesurvey.service.SurveyService;
 @Controller
 public class IndexController {
 
-	private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
-
 	/**
 	 * '@Autowired' tells spring to look for the corresponding implementation on its
 	 * own
@@ -32,16 +29,16 @@ public class IndexController {
 	@Autowired
 	SurveyService sService;
 
-	@RequestMapping("*")
-	public String index(Model model) {
+	@RequestMapping(value = { "/home", "/" })
+	public String index(Model model, HttpSession session) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		logger.info(auth.getName());
+		model.addAttribute("user", auth.getName());
+		model.addAttribute("details", auth.getDetails());
+		model.addAttribute("roles", auth.getAuthorities());
 
-		for (GrantedAuthority ga : auth.getAuthorities()) {
-			logger.info(ga.getAuthority());
-		}
+		session.setAttribute("showingAnswer", null);
 
 		return "home";
 	}

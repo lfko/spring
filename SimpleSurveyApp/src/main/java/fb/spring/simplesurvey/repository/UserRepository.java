@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import fb.spring.simplesurvey.model.User;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 public interface UserRepository extends CrudRepository<User, Integer> {
@@ -20,5 +20,14 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	 */
 	public User findByLogin(String login);
 
-	public User findByLoginAndPassword(String login, byte[] password);
+	/**
+	 * convenient login method: it merely reads (SQL-SELECT) login and password from
+	 * the database and returns an user entity object, if the submitted combination
+	 * of login and password could be found
+	 * 
+	 * @param login
+	 * @param password
+	 * @return
+	 */
+	public User findByLoginAndPassword(String login, String password);
 }

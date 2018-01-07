@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 
- * @author fbecke12
+ * @author Florian Becker
  *
  *         declares our application as a spring-boot-conform application; finds
  *         and loads all entities, controllers, UI templates and other
@@ -17,8 +17,8 @@ public class SimpleSurveyAppApplication {
 
 	public static void main(String[] args) {
 		/**
-		 * when this is called, it'll start the embedded tomcat application
-		 * server (as a default on localhost:8080)
+		 * when this is called, it'll start the embedded tomcat application server (as a
+		 * default on localhost:8080)
 		 */
 		SpringApplication.run(SimpleSurveyAppApplication.class, args);
 	}

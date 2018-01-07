@@ -3,8 +3,6 @@
  */
 package fb.spring.simplesurvey.controller.views;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,19 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 import fb.spring.simplesurvey.service.UserService;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 @Controller
 @SessionAttributes("name")
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-
 	@Autowired
 	UserService service;
 
-	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login() {
 
 		ModelAndView modelAndView = new ModelAndView();
@@ -41,7 +37,7 @@ public class LoginController {
 	@RequestMapping("/login-error.html")
 	public String loginError(Model model) {
 		model.addAttribute("loginError", true);
-		return "login.html";
+		return "login";
 	}
 
 }

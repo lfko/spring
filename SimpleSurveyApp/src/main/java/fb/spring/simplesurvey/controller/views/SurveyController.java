@@ -3,19 +3,22 @@
  */
 package fb.spring.simplesurvey.controller.views;
 
-import java.io.IOException;
+import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import fb.spring.simplesurvey.model.Answer;
 import fb.spring.simplesurvey.model.Survey;
@@ -25,7 +28,7 @@ import fb.spring.simplesurvey.service.SurveyService;
 import fb.spring.simplesurvey.service.UserService;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 @Controller
@@ -34,27 +37,17 @@ public class SurveyController {
 	private static Logger logger = LoggerFactory.getLogger(SurveyController.class);
 
 	@Autowired
-	SurveyService sService;
+	private SurveyService sService;
 
 	@Autowired
-	AnswerService aService;
+	private AnswerService aService;
 
 	@Autowired
-	UserService uService;
+	private UserService uService;
 
 	private static int questionsCount, questionsCompleted;
 
 	private Survey openSurvey;
-
-	/**
-	 * @throws IOException
-	 * 
-	 */
-	@PostConstruct
-	private void init() {
-		logger.info("@PostConstruct called ...");
-
-	}
 
 	/**
 	 * return a list of all registered users (if any)
@@ -64,7 +57,39 @@ public class SurveyController {
 	 */
 	@RequestMapping(value = "/surveys", method = RequestMethod.GET)
 	public String list(Model model) {
-		model.addAttribute("surveys", sService.findAllSurveys());
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		// load all surveys from the database for listing them in the view
+		List<Survey> allSurveys = sService.findAllSurveys();
+		model.addAttribute("surveys", allSurveys);
+
+		User currentUser = uService.getUser(auth.getName());
+
+		/**
+		 * now we have to check, whether one of the surveys has already been completed
+		 * by the current user - if so, we offer a way to view the answers
+		 */
+		for (Survey s : allSurveys) {
+
+			List<Answer> answersToSurvey = s.getAnswer();
+			if (answersToSurvey != null) {
+
+				Answer ans = answersToSurvey.stream()
+						.filter(answer -> answer.getRespondent().getId() == currentUser.getId()).findFirst()
+						.orElse(null);
+
+				if (ans != null) {
+
+					// lamba expression checks, if the answers list contains an answer object, that
+					// references to the current user
+					s.setCompletedByUser(true);
+				} else {
+					s.setCompletedByUser(false);
+				}
+			}
+		}
+
 		return "surveys";
 	}
 
@@ -106,16 +131,36 @@ public class SurveyController {
 	}
 
 	/**
+	 * create a new product and save it into the database
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("survey/delete/{id}")
+	public String deleteSurvey(@PathVariable Integer id) {
+
+		logger.info("survey with id " + id + " will be deleted!");
+
+		sService.deleteSurvey(id);
+
+		return "redirect:/surveys";
+	}
+
+	/**
 	 * 
 	 * @param product
 	 * @return
 	 */
-	@RequestMapping("/survey")
-	public String saveSurvey(@ModelAttribute Survey survey) {
+	@RequestMapping(value = "/survey", method = RequestMethod.POST)
+	public String saveSurvey(@ModelAttribute Survey survey, @RequestParam(required = false, value = "save") String save,
+			@RequestParam(required = false, value = "savestart") String saveStart) {
 
 		sService.addSurvey(survey);
 
-		return "redirect:/survey/" + survey.getId();
+		if (save != null)
+			return "redirect:/surveys";
+		else
+			return "redirect:/survey/" + survey.getId();
 	}
 
 	/**
@@ -124,22 +169,71 @@ public class SurveyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/survey/answer", method = RequestMethod.POST)
-	public String saveSurveyAnswers(@ModelAttribute Answer answer, Model model) {
+	public String saveSurveyAnswers(@ModelAttribute Answer answer, HttpSession session, Model model,
+			@RequestParam(required = false, value = "forward") String forward,
+			@RequestParam(required = false, value = "backward") String backward) {
 
-		logger.info(String.valueOf(answer.getOptionId()));
-		logger.info(String.valueOf(answer.getQuestionId()));
+		Answer answerToView;
+		boolean showingAnswer = false;
 
-		User user = uService.getUser("test");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currUser = uService.getUser(auth.getName());
 
-		answer.setRespondent(user);
+		if (backward != null)
+			questionsCompleted--;
+		else
+			questionsCompleted++;
+
+		// set the user, who had answered the question, to the one currently logged in
+		answer.setRespondent(currUser);
 		answer.setSurvey(openSurvey);
 
-		questionsCompleted++;
+		if (session.getAttribute("showingAnswer") != null)
+			showingAnswer = Boolean.valueOf(session.getAttribute("showingAnswer").toString());
 
-		aService.saveAnwser(answer);
+		answer.setQuestionId(questionsCompleted);
 
-		if (questionsCompleted == questionsCount)
+		if (showingAnswer == false) {
+			logger.info("saving answer for question #" + questionsCompleted);
+			logger.info("setting values to: ");
+			logger.info("questionId: " + answer.getQuestionId());
+			logger.info("optionId: " + answer.getOptionId());
+
+			aService.saveAnwser(answer);
+		} else {
+
+			/**
+			 * lambda expression for searching answers corresponding to the current user' id
+			 * in the list of answers, related to the opened survey
+			 */
+			answerToView = openSurvey.getAnswer().stream().filter(
+					a -> a.getQuestionId() == (questionsCompleted + 1) && a.getRespondent().getId() == currUser.getId())
+					.findFirst().orElse(null);
+
+			logger.info("loading answer for question " + (questionsCompleted + 1));
+
+			if (answerToView != null) {
+				logger.info("found an answer (id: " + answerToView.getId() + ")");
+				logger.info("optionId " + answerToView.getOptionId());
+				logger.info("questionId " + answerToView.getQuestionId());
+				model.addAttribute("answer", answerToView);
+			}
+		}
+
+		if (questionsCompleted == questionsCount) {
+
+			// if the user has finished all the questions, increment the counter and save it
+			// to the survey entity
+			if (showingAnswer == false) {
+				openSurvey.setCompletions(openSurvey.getCompletions() + 1);
+
+				sService.updateSurvey(openSurvey);
+			}
+
+			session.setAttribute("showingAnswer", null);
+
 			return "redirect:/surveys/";
+		}
 
 		model.addAttribute("survey", openSurvey);
 
@@ -148,4 +242,46 @@ public class SurveyController {
 		return "/questions/survey_page";
 	}
 
+	/**
+	 * opens the survey (and its subsequent answer pages) to view the answers a user
+	 * has given before
+	 * 
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/survey/{id}/showAnswers", method = RequestMethod.GET)
+	public String showSurveyAnswers(@PathVariable Integer id, HttpSession session, Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currUser = uService.getUser(auth.getName());
+
+		logger.info("showAnswers ... ");
+
+		// lookup the appropriate entity object in the database
+		openSurvey = sService.findSurvey(null, id);
+		// how many questions will be there?
+		questionsCount = openSurvey.getQuestions();
+		questionsCompleted = 0;
+
+		logger.info("loading answer for question " + (questionsCompleted + 1));
+
+		model.addAttribute("survey", openSurvey);
+
+		Answer answer = openSurvey.getAnswer().stream().filter(
+				a -> a.getQuestionId() == (questionsCompleted + 1) && a.getRespondent().getId() == currUser.getId())
+				.findFirst().orElse(null);
+
+		if (answer != null) {
+			logger.info("found an answer (id: " + answer.getId() + ")");
+			logger.info("optionId " + answer.getOptionId());
+			logger.info("questionId " + answer.getQuestionId());
+			model.addAttribute("answer", answer);
+		}
+
+		session.setAttribute("showingAnswer", true);
+		model.addAttribute("template", "survey_question_" + questionsCompleted);
+
+		return "/questions/survey_page";
+	}
 }

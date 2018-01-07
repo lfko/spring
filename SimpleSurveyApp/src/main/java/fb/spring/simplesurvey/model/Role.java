@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @author Florian "lefko" Becker
+ * @author Florian Becker
  *
  *         entity class representing an User Role in the ERM
  */

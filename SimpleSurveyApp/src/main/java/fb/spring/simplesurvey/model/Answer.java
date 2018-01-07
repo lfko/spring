@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 @Entity
@@ -45,7 +45,7 @@ public class Answer {
 	/**
 	 * reference to the user, who has answered the question
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
 	private User respondent;
 

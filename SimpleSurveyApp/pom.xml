@@ -5,11 +5,12 @@
 
 	<groupId>fb.spring.simplesurvey</groupId>
 	<artifactId>SimpleSurveyApp</artifactId>
+	<!-- this version tag is more or less arbitrarily -->
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>SimpleSurveyApp</name>
-	<description>Simple JPA project, created with Spring Tools for Eclipse</description>
+	<description>Simple Spring Boot project, created with Spring Tools for Eclipse</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -37,6 +38,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- implements all persistence related classes -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -46,12 +48,6 @@
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<!--  
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-instrument-tomcat</artifactId>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -61,7 +57,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		<!-- for enhanced developing options -->
+		<!-- enhancing thymeleaf with security taglibs -->
+		<dependency>
+  			<groupId>org.thymeleaf.extras</groupId>
+  			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
+		<!-- for enhanced developing options, e.g. live reload feature -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -72,13 +73,16 @@
 		</dependency>
 	</dependencies>
 
+	<!-- instructions, which affect the build -->
 	<build>
 		<plugins>
+			<!-- packs the whole project as a standalone jar -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		
 	</build>
 
 

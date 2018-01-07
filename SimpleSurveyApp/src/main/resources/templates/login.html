@@ -1,40 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>First Web Application</title>
+		<title>Login</title>
 	</head>
 	<body>
 		<!-- with replace, we can use a code-fragment to replace a specific part of the DOM -->
 		<div th:replace="fragments/header :: head">...</div>
 	
 		<div class="container">
+			
 			<!-- with include, we can include specific DOM-contents of a file -->
 			<div th:include="fragments/navbar :: body">&nbsp;</div>
 			
-			<p th:if="${loginError}" class="error">Wrong user or password</p>
-			
-			<form class="form-horizontal" th:action="@{/login}" method="post">
-				<div class="col-sm-10">
-		        	<label for="login">Login-Name</label>
-		        	<input type="text" name="login" id="login" required autofocus>
-		    	</div>
-		    	<div class="col-sm-10">
-		        	<label for="password">Passwort</label>
-		        	<input type="password" name="password" id="password" required>
-		    	</div>
-		    	<!--  
-		    	<div class="col-sm-10">
-		        	<label for="remember-me">Remember me</label>
-		        	<input type="checkbox" name="remember-me" id="remember-me">
-		    	</div>
-		    	-->
-		    	
-		    	<input class="form-control" type="submit" value="Senden">
-			</form>
-		
+			<div th:if="${loginError}" class="alert alert-error">
+				Invalid username and password.
+			</div>
+			<div class="col-md-6 col-md-offset-3">
+				<form class="form-horizontal" th:action="@{/login}" method="post">
+					<div class="form-group">
+			        	<label for="login">Login-Name:</label>
+			        	<input type="text" name="login" id="login" required autofocus>
+			    	</div>
+			    	<div class="form-group">
+			        	<label for="password">Passwort:</label>
+			        	<input type="password" name="password" id="password" required>
+			    	</div>
+				    <button type="submit" class="btn btn-primary">Einloggen</button>
+				</form>
+			</div>
 		</div>	
-
-
 	</body>
-
 </html>

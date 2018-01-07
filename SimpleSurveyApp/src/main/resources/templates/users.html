@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	<head>
 		<title>Benutzer</title>
 	</head>
@@ -23,6 +23,8 @@
 									<th>Login</th>
 									<th>Nachname</th>
 									<th>Aktiver Benutzer</th>
+									<th>Rolle</th>
+									<th>Löschen</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -31,7 +33,11 @@
 									<td th:text="${user.firstname}"></td>
 									<td th:text="${user.login}"></td>
 									<td th:text="${user.surname}"></td>
+									<!-- this only works because we are just assigning one role per each user -->
+									<td th:text="${user.roles[0].role}"></td>
 									<td th:text="${user.active}"></td>
+									<td th:if="${user.login} != ${loggedInUser}" sec:authorize="hasAuthority('ADMIN')"><a th:href="${'/user/delete/' + user.id}">Löschen</a></td>
+									<td th:if="${user.login} != ${loggedInUser}" sec:authorize="hasAuthority('USER')"><b>only ADMIN</b></td>  
 								</tr>
 							</tbody>
 						</table>

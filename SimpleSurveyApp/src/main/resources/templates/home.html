@@ -15,7 +15,12 @@
 				<div class="container text-center">
 					<h2>Willkommen beim Online-Umfrage-Tool</h2>
 					<p>Hier kann noch ein einleitender Text stehen</p>
-					<p><span th:utext="${userName}"></span><p>
+					<!-- we access model attributes, which were added by the IndexController beforehand -->
+					<p>Willkommen, <span th:utext="${user}"></span><p>
+					<p>Sie haben folgende Rolle: <span th:utext="${roles}"></span><p>
+					<!--  
+					(<p><span th:utext="${details}"></span></p>)
+					-->
 				</div>
 			</div>
 

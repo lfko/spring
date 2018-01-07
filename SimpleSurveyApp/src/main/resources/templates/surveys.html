@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	<head>
 		<title>Umfragen</title>
 
@@ -26,6 +26,8 @@
 									<th>Anzahl der Fragen</th>
 									<th>Anzahl der Absolvierungen</th>
 									<th>Starten</th>
+									<th>Löschen</th>
+									<th>Anzeigen</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -37,7 +39,8 @@
 									<td th:text="${survey.questions}"></td>
 									<td th:text="${survey.completions}"></td>
 									<td><a th:href="${'/survey/' + survey.id}">Starten</a></td>
-	
+									<td><a th:href="${'/survey/delete/' + survey.id}" sec:authorize="hasAuthority('ADMIN')">Löschen</a></td>
+									<td th:if="${survey.completedByUser} == true"><a th:href="${'/survey/' + survey.id}+'/showAnswers'">Anzeigen</a></td>
 								</tr>
 							</tbody>
 						</table>

@@ -11,13 +11,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
+ * 
+ *         configuration bean for setting up Spring Persistence parameters
  *
  */
 @Configuration
 public class PersistenceConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceConfig.class);
+
+	/**
+	 * following values will be read from the application.properties
+	 */
 
 	@Value("${spring.datasource.driver-class-name}")
 	private String driverName;
@@ -31,7 +37,13 @@ public class PersistenceConfig {
 	@Value("${spring.datasource.password}")
 	private String dbUserPass;
 
-	@Bean(name = "dataSource")
+	/**
+	 * provides a DataSource bean, which can be used for any persistence operation
+	 * inside the container
+	 * 
+	 * @return
+	 */
+	@Bean(name = "dataSource") // name is case sensitive and shoud be referenced appropriately
 	public DriverManagerDataSource datasource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setDriverClassName(driverName);

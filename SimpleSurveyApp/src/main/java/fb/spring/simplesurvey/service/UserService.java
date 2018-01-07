@@ -6,14 +6,13 @@ package fb.spring.simplesurvey.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import fb.spring.simplesurvey.model.User;
 import fb.spring.simplesurvey.repository.UserRepository;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 @Service
@@ -21,9 +20,6 @@ public class UserService {
 
 	@Autowired
 	UserRepository repository;
-
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	/**
 	 * service method for returning a list with all currently registered users
@@ -51,14 +47,17 @@ public class UserService {
 
 	public User addUser(User user) {
 
-		// user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
 		return repository.save(user);
 	}
 
 	public void delete(Integer id) {
 
 		repository.delete(id);
+	}
+
+	public User login(String login, String password) {
+
+		return repository.findByLoginAndPassword(login, password);
 	}
 
 }

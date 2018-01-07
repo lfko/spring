@@ -5,18 +5,18 @@ package fb.spring.simplesurvey.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  *         jpa representation of a survey object
  */
@@ -49,21 +49,30 @@ public class Survey {
 	private String desc;
 
 	/**
-	 * JPA relationship: one user could has created one or more surveys
+	 * indicates, whether a survey has already been answered by the current user
+	 * 
+	 * the annotation marks it as a non-persistent property
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CREATOR_ID")
+	@Transient
+	private boolean completedByUser;
+
+	/**
+	 * JPA relationship: one user could has created one or more surveys - but there
+	 * is no referencing via FK, because this means, if we have to delete users, we
+	 * have to delete their surveys as well
+	 */
+	@OneToOne
 	private User creator;
 
 	/**
-	 * 
+	 * since there is a OneToMany-relation between Survey and Answer, we'll have to
+	 * make sure, that in case, we delete a survey, all belonging answers will be
+	 * deleted as well; otherwise, the persistence framework will complain about
+	 * entities without FK-relation - to achieve this, let's denote this mapping as
+	 * cascading, so FK-relations will be deleted as well automatically
 	 */
-	@OneToMany(mappedBy = "survey")
+	@OneToMany(mappedBy = "survey", cascade = CascadeType.REMOVE)
 	private List<Answer> answer;
-
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
 
 	public int getId() {
 		return id;
@@ -103,6 +112,39 @@ public class Survey {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	/**
+	 * @return the answers
+	 */
+	public List<Answer> getAnswer() {
+		return answer;
+	}
+
+	/**
+	 * @return the completedByUser
+	 */
+	public boolean isCompletedByUser() {
+		return completedByUser;
+	}
+
+	/**
+	 * @param completedByUser
+	 *            the completedByUser to set
+	 */
+	public void setCompletedByUser(boolean completedByUser) {
+		this.completedByUser = completedByUser;
+	}
+
+	/**
+	 * @return the creator
+	 */
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 
 }

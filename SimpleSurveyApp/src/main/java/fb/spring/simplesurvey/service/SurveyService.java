@@ -23,14 +23,13 @@ import fb.spring.simplesurvey.repository.SurveyRepository;
 public class SurveyService {
 
 	@Autowired
-	SurveyRepository repository;
+	private SurveyRepository repository;
 
 	@Autowired
-	UserService uService;
+	private UserService uService;
 
 	/**
-	 * service method for adding a new survey to the application/into the
-	 * database
+	 * service method for adding a new survey to the application/into the database
 	 * 
 	 * @param label
 	 *            Naming label
@@ -53,6 +52,11 @@ public class SurveyService {
 	}
 
 	public Survey addSurvey(Survey survey) {
+
+		return repository.save(survey);
+	}
+
+	public Survey updateSurvey(Survey survey) {
 
 		return repository.save(survey);
 	}

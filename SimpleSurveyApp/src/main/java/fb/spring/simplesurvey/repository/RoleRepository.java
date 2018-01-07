@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import fb.spring.simplesurvey.model.Role;
 
 /**
- * @author Florian "lefko" Becker
+ * @author Florian Becker
  *
  */
 @Repository

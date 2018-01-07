@@ -4,11 +4,11 @@
 package fb.spring.simplesurvey.model;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * @author fbecke12
+ * @author Florian Becker
  *
  */
 @Entity
@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	/**
@@ -62,12 +62,6 @@ public class User {
 	private boolean active;
 
 	/**
-	 * JPA relationship: one user could have created one or more surveys
-	 */
-	@OneToMany(mappedBy = "creator")
-	private List<Survey> surveys;
-
-	/**
 	 * 
 	 */
 	@OneToMany(mappedBy = "respondent")
@@ -82,9 +76,24 @@ public class User {
 	 * we can access afterwards and which establishes the link between a user and
 	 * role(s)
 	 */
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private List<Role> roles;
+
+	/**
+	 * @return the roles
+	 */
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	/**
+	 * @param roles
+	 *            the roles to set
+	 */
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 
 	public int getId() {
 		return id;
@@ -124,10 +133,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
 	}
 
 	/**

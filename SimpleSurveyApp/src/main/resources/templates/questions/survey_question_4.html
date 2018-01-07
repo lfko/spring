@@ -3,30 +3,31 @@
 	<head></head>
 	<body>
 		<div class="container">
-			<h3>Frage 5</h3>
+			<h3>Frage 5 / <span th:text="${survey.questions}"></span></h3>
 			<form id="survey_question_1" th:object="${answer}" style="width: 60%; margin: 0px auto;" method="post" th:action="@{/survey/answer}">
 				<fieldset class="form-group">
 					<legend>Würden Sie lieber ... ?</legend>
 					<div class="form-check">
 						<label class="form-check-label"> 
-							<input type="radio" th:field="*{optionId}" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" checked> Eis essen
+							<input type="radio" th:field="*{optionId}" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" th:checked="${answer.optionId} eq 1"> Eis essen
 						</label>
 					</div>
 					<div class="form-check">
 						<label class="form-check-label"> 
-							<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" th:field="*{optionId}" value="2"> Ski fahren
+							<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" th:field="*{optionId}" value="2" th:checked="${answer.optionId} eq 2"> Ski fahren
 						</label>
 					</div>
 					<div class="form-check disabled">
 						<label class="form-check-label"> 
-							<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" th:field="*{optionId}" value="3"> Nichts dergleichen
+							<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" th:field="*{optionId}" value="3" th:checked="${answer.optionId} eq 3"> Nichts dergleichen
 						</label>
 					</div>
 				</fieldset>
 	
 				<!-- do not use th:field for the questionId to set, because thymeleaf internally overwrites it -->
 				<input type="hidden" name="questionId" th:value="4" /> 
-				<input type="submit" value="Weiter" class="btn btn-default" id="btn_submit">
+				<input type="submit" value="Weiter" class="btn btn-default" name="forward">
+				<input type="submit" value="Zurück" class="btn btn-default" name="backward">
 			</form>
 		</div>
 	</body>

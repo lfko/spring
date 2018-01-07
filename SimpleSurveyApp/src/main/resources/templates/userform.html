@@ -14,8 +14,12 @@
 			<div th:include="fragments/navbar :: body">&nbsp;</div>				
 					<h2>Neuen Benutzer anlegen</h2>
 			
-	            <div class="col-lg-8 col-md-7 col-sm-6">
+	            <div class="col-lg-5 col-md-7 col-sm-6">
 	                <form action="#" class="form-horizontal" th:object="${user}" th:action="@{/user/create}" method="post">
+                		<ul id="validation-messages" th:if="${#fields.hasErrors('*')}">
+							<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+						</ul>
+	                	
 	                    <div class="form-group">
 	                        <label for="product_name">Vorname des Benutzers:</label>
 	                        <input type="text" class="form-control" th:field="*{firstname}"/>
@@ -32,8 +36,22 @@
 	                        <label for="product_price">Login:</label>
 	                        <input type="text" class="form-control" th:field="*{login}"/>
 	                    </div>
-	                    <input type="submit" class="btn btn-default" id="btn_submit">
-	                    <a th:href="@{/users}">Abbrechen</a>
+	                    <div class="form-group">
+	                    	<label>Rolle des Benutzers:</label>
+	                    	<select th:field="*{roles}">
+								<option th:each="role : ${roles}" 
+							          	th:value="${role.id}" 
+							          	th:text="${role.role}">Rolle</option>
+							</select>
+	                    </div>
+	                    <div class="btn-group">
+							<button type="reset" class="btn btn-reset">Eingaben zurücksetzen</button>
+						</div>
+						<br/>
+						<div class="btn-group">
+		                    <input type="submit" class="btn btn-primary" value="Speichern" id="btn_submit">
+		                    <a th:href="@{/home}"><button class="btn btn-primary">Abbrechen</button></a>
+	                    </div>
 	                </form>
 	            </div>
         	
