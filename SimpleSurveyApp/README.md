@@ -4,7 +4,7 @@ SimpleSurveyApp - a Spring Boot prototypical application
 How to - wie starte und benutze ich die Anwendung?
 	-> die Jar-Datei SimpleSurveyApp per Kommandokonsole ausführen
 	-> es sollte die Start-Prozedur des integrierten Webservers zu sehen sein
-	-> wenn die Ausgabe "" auf der Konsole zu sehen ist, ist der Webserver vollständig hochgefahren
+	-> wenn die Ausgabe "Started SimpleSurveyAppApplication in x.x seconds (JVM running for 6.009)" auf der Konsole zu sehen ist, ist der Webserver vollständig hochgefahren
 	-> Aufruf der URL http://localhost:8080/ führt direkt zur Login-Maske
 	-> bei erstmaligen Start wird ein Standard-Admin-Benutzer erstellt (Login: admin; Passwort: admin01)
 	
