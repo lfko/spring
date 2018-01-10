@@ -76,18 +76,10 @@
 	<!-- instructions, which affect the build -->
 	<build>
 		<plugins>
-			<!-- packs the whole project as a standalone jar -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-jar-plugin</artifactId>
-			    <configuration>
-			        <finalName>SimpleSurveyApp</finalName>                   
-			    </configuration>
-			</plugin>  
 		</plugins>
 	</build>
 
