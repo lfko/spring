@@ -34,18 +34,12 @@
 	                <label class="col-sm-2 control-label">Anzahl der Fragen:</label>
 
 	                <div class="col-sm-1">
-	                	<!--  
-	                    <input type="text" class="form-control" th:field="*{questions}"/>
-						-->
-						<select th:field="*{questions}" class="form-control">
-							<option value="1" >1</option>
-							<option value="2" >2</option>
-							<option value="3" >3</option>
-							<option value="4" >4</option>
-							<option value="5" >5</option>
-							<option value="6" >6</option>
-							<!-- when more questions are added, increase the size of the select accordingly -->
+	                	<select th:field="*{questions}" class="form-control">
+							<option th:each="number : ${maxQuestions}"
+									th:value="${number}"
+									th:text="${number}">1</option>
 						</select>
+						<!-- when more questions are added, increase the size of the select accordingly -->
 					</div>
 				</div>
 				
