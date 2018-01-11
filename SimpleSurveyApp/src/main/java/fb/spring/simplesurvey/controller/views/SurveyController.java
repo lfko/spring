@@ -3,6 +3,7 @@
  */
 package fb.spring.simplesurvey.controller.views;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -48,6 +50,14 @@ public class SurveyController {
 	private static int questionsCount, questionsCompleted;
 
 	private Survey openSurvey;
+
+	/**
+	 * a list of integers for populating the questions count select list
+	 */
+	private List<Integer> questions;
+
+	@Value("${survey.questions}")
+	private int maxQuestions;
 
 	/**
 	 * return a list of all registered users (if any)
@@ -126,7 +136,18 @@ public class SurveyController {
 	 */
 	@RequestMapping("survey/new")
 	public String newSurvey(Model model) {
+
+		questions = new ArrayList<Integer>();
+
+		for (int i = 1; i <= maxQuestions; i++) {
+			questions.add(new Integer(i));
+		}
+
+		logger.info("max questions: " + questions.size());
+
+		model.addAttribute("maxQuestions", questions);
 		model.addAttribute("survey", new Survey());
+
 		return "surveyform";
 	}
 
